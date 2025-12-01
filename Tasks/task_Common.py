@@ -1,15 +1,7 @@
 import os, sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-import subprocess
-import pytest,logging
+import logging
 
-from appium import webdriver
-from appium.options.common.base import AppiumOptions
-from appium.webdriver.common.appiumby import AppiumBy
-from appium.options.ios import XCUITestOptions
-
-import Config.config as config
-import Pages.page_Base as BasePage
 from Pages.page_Common import CommonACID
 
 class Task_Common:
@@ -18,41 +10,42 @@ class Task_Common:
         self.common_page = CommonACID(driver)
 
     ############"""Check Functions"""############
+    def check_Allow_Notification(self):
+        """
+        공용 알림 허용 팝업이 정상적으로 진입 했는지를 확인 하기 위한 기능
+        """
+        checks = {
+            "allow": self.common_page.check_element(self.common_page.qa_Common_Allow_Button),
+            "notTrack": self.common_page.check_element(self.common_page.qa_Common_NotTrack_Button),
+        }
+        missing = [name for name, ok in checks.items() if not ok]
+        assert not missing, f"알림 허용 팝업 요소 미노출: {', '.join(missing)}"
+        logging.info("정상적으로 알림 허용 팝업이 나타났습니다.")
 
-    def click_Common_Close_Button(self):
-        self.common_page.click(self.common_page.qa_Common_Close_Button)
-        logging.info("정상적으로 X 버튼이 클릭 되었습니다.")
+
+    ############"""Control Functions"""############
 
     def click_Common_Back_Button(self):
-        self.common_page.click(self.common_page.qa_Common_Back_Button)
-        logging.info("정상적으로 X 버튼이 클릭 되었습니다.")
+        ok = self.common_page.click(self.common_page.qa_Common_Back_Button)
+        assert ok, "둘러보기 버튼이 표시되지 않아 클릭할 수 없습니다."
+        logging.info("정상적으로 <- 버튼이 클릭 되었습니다.")
+
+    def click_Common_Allow_Button(self):
+        ok = self.common_page.click(self.common_page.qa_Common_Allow_Button)
+        assert ok, "허용 버튼이 표시되지 않아 클릭할 수 없습니다."
+        logging.info("정상적으로 허용 버튼이 클릭 되었습니다.")
+
+    def click_Common_NotTrack_Button(self):
+        ok = self.common_page.click(self.common_page.qa_Common_NotTrack_Button)
+        assert ok, "허용 버튼이 표시되지 않아 클릭할 수 없습니다."
+        logging.info("정상적으로 허용 버튼이 클릭 되었습니다.")
+
+    def click_Common_Close_Button(self):
+        ok = self.common_page.click(self.common_page.qa_Common_Close_Button)
+        assert ok, "닫기 버튼이 표시되지 않아 클릭할 수 없습니다."
+        logging.info("정상적으로 닫기 버튼이 클릭 되었습니다.")
     
-    def click_Common_Cancel_Button(self, timeout: int = 10):
-        """공용 'Cancel' 버튼을 탭."""
-        clicked = self.common_page.click(self.common_page.qa_Common_Cancel_Button, timeout=timeout)
-
-        if clicked:
-            logging.info("공용 'Cancel' 버튼을 선택했습니다.")
-        else:
-            logging.error("공용 'Cancel' 버튼을 선택하지 못했습니다.")
-            assert False
-        
-    def click_Common_Confirm_Button(self, timeout: int = 10):
-        """공용 'Confirm' 버튼을 탭."""
-        clicked = self.common_page.click(self.common_page.qa_Common_Confirm_Button, timeout=timeout)
-
-        if clicked:
-            logging.info("공용 'Confirm' 버튼을 선택했습니다.")
-        else:
-            logging.error("공용 'Confirm' 버튼을 선택하지 못했습니다.")
-            assert False
-    
-    def click_Common_Delete_Button(self, timeout: int = 10):
-        """공용 'Delete' 버튼을 탭."""
-        clicked = self.common_page.click(self.common_page.qa_Common_Delete_Button, timeout=timeout)
-
-        if clicked:
-            logging.info("공용 'Delete' 버튼을 선택했습니다.")
-        else:
-            logging.error("공용 'Delete' 버튼을 선택하지 못했습니다.")
-            assert False
+    def click_Common_DoNotShowAgain_Button(self):
+        ok = self.common_page.click(self.common_page.qa_Common_DoNotShowAgain_Button)
+        assert ok, "다시보지않기 버튼이 표시되지 않아 클릭할 수 없습니다."
+        logging.info("정상적으로 다시보지않기 버튼이 클릭 되었습니다.")
